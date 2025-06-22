@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="JobPortal - Find your dream job with private and government job listings" />
+    <meta name="theme-color" content="#3B82F6" />
+    <title>JobPortal - Find Your Dream Job</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+    
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="/logo192.png" />
+    
+    <!-- Firebase Messaging Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/firebase-messaging-sw.js')
+          .then((registration) => {
+            console.log('SW registered: ', registration);
+          }).catch((registrationError) => {
+            console.log('SW registration failed: ', registrationError);
+          });
+      }
+    </script>
+    <script type="module" crossorigin src="/assets/index-BvksitfA.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-B10o_Ok9.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
