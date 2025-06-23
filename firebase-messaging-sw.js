@@ -1,6 +1,6 @@
 // Firebase Messaging Service Worker
-importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js');
-importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js');
 
 // Initialize the Firebase app in the service worker
 firebase.initializeApp({
@@ -19,17 +19,18 @@ const messaging = firebase.messaging();
 messaging.onBackgroundMessage((payload) => {
   console.log('Received background message ', payload);
   
-  const notificationTitle = payload.notification.title;
+  const notificationTitle = payload.notification?.title || 'New Notification';
   const notificationOptions = {
-    body: payload.notification.body,
+    body: payload.notification?.body || 'You have a new notification',
     icon: '/logo192.png',
     badge: '/logo192.png',
     tag: 'job-notification',
     requireInteraction: true,
+    data: payload.data,
     actions: [
       {
         action: 'view',
-        title: 'View Job'
+        title: 'View'
       },
       {
         action: 'dismiss',
@@ -43,12 +44,37 @@ messaging.onBackgroundMessage((payload) => {
 
 // Handle notification clicks
 self.addEventListener('notificationclick', (event) => {
+  console.log('Notification click received.');
+  
   event.notification.close();
   
   if (event.action === 'view') {
-    // Open the app when user clicks "View Job"
+    // Open the app when user clicks "View"
     event.waitUntil(
       clients.openWindow('/')
+    );
+  }
+});
+
+// Handle push events
+self.addEventListener('push', (event) => {
+  console.log('Push event received:', event);
+  
+  if (event.data) {
+    const data = event.data.json();
+    console.log('Push data:', data);
+    
+    const notificationTitle = data.notification?.title || 'JobPortal';
+    const notificationOptions = {
+      body: data.notification?.body || 'New update available',
+      icon: '/logo192.png',
+      badge: '/logo192.png',
+      tag: 'job-portal-notification',
+      data: data.data
+    };
+    
+    event.waitUntil(
+      self.registration.showNotification(notificationTitle, notificationOptions)
     );
   }
 });
